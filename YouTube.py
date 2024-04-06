@@ -141,8 +141,6 @@ def LR(video_url, num_comments=1000):
 
     # auc-roc
     predicted_probabilities_lr = lr_model.predict_proba(X_test_tfidf)
-    st.write("ROC curve for LR")
-    plot_roc_curve(y_test, predicted_probabilities_lr, 'Positive')
     # true positive
     true_positive_rate = recall_score(y_test, predicted_sentiments_lr, labels=['Positive'], average=None)
     # false positive
@@ -189,8 +187,6 @@ def KNN(video_url, num_comments=1000):
 
     # auc-roc
     predicted_probabilities_knn = knn_model.predict_proba(X_test_tfidf)
-    st.write("ROC curve for KNN")
-    plot_roc_curve(y_test, predicted_probabilities_knn, 'Positive')
     # true positive
     true_positive_rate = recall_score(y_test, predicted_sentiments_knn, labels=['Positive'], average=None)
     # false positive
@@ -274,6 +270,9 @@ if youtube_link:
             fig_lr = create_pie_chart(positive_percentage_lr, negative_percentage_lr, neutral_percentage_lr)
             st.pyplot(fig_lr)
 
+            # Plot AUC ROC curve for LR on the sidebar
+            plot_roc_curve(y_test, predicted_probabilities_lr, 'Positive')
+
             st.markdown("""-----------------""")
 
             st.write("K-Nearest Neighbors for text analytics is a popular choice, but it may return lower accuracy "
@@ -299,6 +298,9 @@ if youtube_link:
                 (comments_df_KNN['Sentiment'] == 'Neutral').mean() * 100,
             )
             st.pyplot(fig_knn)
+
+            # Plot AUC ROC curve for KNN on the sidebar
+            plot_roc_curve(y_test, predicted_probabilities_knn, 'Positive')
 
     except Exception as e:
         st.write("An error occurred:", e)
